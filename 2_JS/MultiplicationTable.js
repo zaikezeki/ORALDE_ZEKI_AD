@@ -1,7 +1,8 @@
-for (var i = 1; i < 10; i++) {
-    for (j = 1; j < 10; j++) {
-        var result = result + (i * j);
+var result = '\n';
+for (var i = 1; i < 11; i++) {
+    for (j = 1; j < 11; j++) {
+        result = result + (i * j) + '';
     }
-    result = '\n';
+    result = result + '\n';
     console.log(result);
 }
