@@ -5,6 +5,5 @@ for (var i = 7; i >= height; i--) {
         control = control + "*";
     }
     control = control + "\n";
+    console.log(control);
 }
-
-console.log(control);
