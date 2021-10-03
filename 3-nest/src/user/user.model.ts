@@ -1,28 +1,34 @@
+import { CRUDReturn } from "./crud_return.interface";
+import { Helper } from "./Helper";
+
 export class User{
-    private id: number;
-    private name: string;
-    private age:number;
-    private email:string;
-    private password: string;
+    public id: string;
+    public name: string;
+    public age:number;
+    public email:string;
+    public password: string;
 
 
-    constructor(id:number,name:string,age:number,email:string,password:string){
-        this.id=id;
+    constructor(name:string,age:number,email:string,password:string){
+        this.id = Helper.generateUID();
         this.name=name;
         this.age=age;
         this.email=email;
         this.password=password;
     }
 
-    login(email:string, password:string){
-       if(email===this.email && password===this.password){
-           return "Login Sucess";
+    login(password: string): CRUDReturn {
+      try {
+        if (this.password === password) {
+          return { success: true, data: this.toJason() };
+        } else {
+          throw new Error(`${this.email} login fail, password does not match`);
         }
-        else{
-            return "Invalid Password and Email";
-       
-       }
+      } catch (error) {
+        return { success: false, data: error.message };
+      }
     }
+
 
 
     toJason(){
@@ -37,7 +43,7 @@ export class User{
 
 
     log(){
-        console.log(`${this.id}:${this.name}, ${this.age}, ${this.email}` );
+        console.log(this.toJason);
     }
 
     registerLog(){
@@ -45,6 +51,33 @@ export class User{
 
     }
 
+    
+    replaceLog(){
+      console.log("Data Overwritten");
+      
+    }
+
+    matches(term: string): boolean{
+      var keys: Array<string>=Helper.describeClass(User);
+      keys=Helper.removeItemOnce(keys, 'passord');
+      for(const key of keys){
+        if (`${this[key]}`=== term)
+        return true;
+      }
+      return false;
+    }
+
+
+    replaceValues(body: any): boolean{
+      var keys: Array<String>= Helper.describeClass(User);
+      keys= Helper.removeItemOnce(keys,'id');
+      for(const key of Object.keys(body)){
+        this[key]=body[key];
+        
+        return false;
+      }
+
+    }
 
 
 }

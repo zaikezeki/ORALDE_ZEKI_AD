@@ -1,4 +1,4 @@
-import { Controller,Get,Body,Post, Param, Delete } from '@nestjs/common';
+import { Controller,Get,Body,Post, Param, Delete, Put,Patch } from '@nestjs/common';
 import { resourceUsage } from 'process';
 import { UserService } from './user.service';
 
@@ -18,21 +18,42 @@ export class UserController {
     }
 
 
-    @Get('/search/:id')
-    getId(@Body("id") id:number ){
-        return this.userService.search(id);
+    @Get("search/:term")
+    searchUser(@Param('term') term)
+    {
+        return this.userService.searchUser(term);
     }
 
     
     @Delete('/removeId/:id')
-        deleteId(@Body("id") id: number){
-            return this.userService.delete(id);
+        deleteId(@Body("id") id:string){
+           return this.userService.delete(id);
     }
 
 
-    @Post("/login")
-    loginUser(@Body("email") email:string , @Body("password") password:string){
-        return this.userService.loginUser(email,password);
+    @Post('/login')
+    loginUser(@Body() body : any ) {
+      
+      return this.userService.loginUser(body);
     }
+
+
+   // @Put('/changeData/:id')
+    //replaceUser(@Param("id") id:number, @Body() body: any){
+    //    return this.userService.replaceUser(id, body);
+   // }
+
+
+
+   @Patch("/:id")
+   patchUser(@Param('id') id, @Body() body:any)
+   {
+       if(id!=null && body!=null)
+           return this.userService.patchUser(id,body);
+       else
+           return "No parameters added";
+   }
 
 }
+
+
