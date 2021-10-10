@@ -6,54 +6,45 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private readonly userService:UserService){}
 
-    @Get("/all")
-    getAll(){
-        return this.userService.getAll();
+    @Post('/register')
+    register(@Body() body: any) {
+      return this.userService.register(body);
     }
-
-
-    @Post("/register")
-    addUser(@Body() body:any){
-        return this.userService.addUser(body);
-    }
-
-
-    @Get("search/:term")
-    searchUser(@Param('term') term)
-    {
-        return this.userService.searchUser(term);
-    }
-
-    
-    @Delete('/removeId/:id')
-        deleteId(@Body("id") id:string){
-           return this.userService.delete(id);
-    }
-
-
+  
     @Post('/login')
-    loginUser(@Body() body : any ) {
-      
-      return this.userService.loginUser(body);
+    login(@Body('email') email: string, @Body('password') password: string) {
+      return this.userService.login(email, password);
     }
-
-
-   // @Put('/changeData/:id')
-    //replaceUser(@Param("id") id:number, @Body() body: any){
-    //    return this.userService.replaceUser(id, body);
-   // }
-
-
-
-   @Patch("/:id")
-   patchUser(@Param('id') id, @Body() body:any)
-   {
-       if(id!=null && body!=null)
-           return this.userService.patchUser(id,body);
-       else
-           return "No parameters added";
-   }
-
-}
-
-
+  
+    @Get('/all')
+    getAllUser() {
+      return this.userService.getAll();
+    }
+    @Get('/search/:term')
+    searchUser(@Param('term') term: string) {
+      return this.userService.searchUser(term);
+    }
+  
+    @Get('/:id')
+    getUserID(@Param('id') id: string) {
+      return this.userService.getOne(id);
+    }
+  
+    @Put('/:id')
+    replaceValuePut(@Param('id') id: string, @Body() body: any) {
+      return this.userService.replaceValuePut(id, body);
+    }
+  
+    @Patch('/:id')
+    replaceValuePatch(@Param('id') id: string, @Body() body: any) {
+      return this.userService.replaceValuePatch(id, body);
+    }
+  
+    @Delete('/:id')
+    deleteUser(@Param('id') id: string) {
+      return this.userService.deleteUser(id);
+    }
+  
+  
+  
+  }
