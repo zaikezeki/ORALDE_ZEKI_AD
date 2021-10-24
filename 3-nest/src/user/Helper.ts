@@ -1,4 +1,4 @@
-import { User } from './user.model';
+import { User } from './user.module';
 import { v4 as uid } from 'uuid';
 export class Helper {
   //returns an array of attributes as defined in the class
@@ -21,14 +21,19 @@ export class Helper {
   }
   static populate(): Map<string, User> {
     var result: Map<string, User> = new Map<string, User>();
+    console.log("shet");
+
     try {
-      var users = [
-        new User('Leanne Graham', 18, 'sincere@april.biz', 'LG_123456'),
-        new User('Ervin Howell', 21, 'shanna@melissa.tv', 'EH_123123'),
-        new User('Nathan Plains', 25, 'nathan@yesenia.net', 'NP_812415'),
-        new User('Patricia Lebsack', 18, 'patty@kory.org', 'PL_12345'),
+        var users = [
+        new User("a",'Leanne Graham', 18, 'sincere@april.biz', 'LG_123456'),
+        new User("b",'Ervin Howell', 21, 'shanna@melissa.tv', 'EH_123123'),
+        new User("c",'Nathan Plains', 25, 'nathan@yesenia.net', 'NP_812415'),
+        new User("d",'Patricia Lebsack', 18, 'patty@kory.org', 'PL_12345'),
       ];
       users.forEach((user) => {
+        console.log("Fak");
+        console.log(user.id);
+      
         result.set(user.id, user);
       });
       return result;
@@ -40,8 +45,7 @@ export class Helper {
 
   static validBody(body: any): { valid: boolean; data: string } {
     try {
-    //   var keys: Array<string> = Helper.describeClass(User);
-    var keys: Array<string> = ['name', 'age', 'email', 'password'];
+      var keys: Array<string> = Helper.describeClass(User);
       var types: Map<string, string> = new Map<string, string>();
       types.set('name', typeof '');
       types.set('age', typeof 0);

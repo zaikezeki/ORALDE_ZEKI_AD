@@ -1,0 +1,16 @@
+<div class="mainContent">
+    <div class="login">
+        <div class="inputs">
+            <h1>Login</h1>
+            <form method="post"></form>
+            <label for="EMAIL">EMAIL</label>
+            <input type="email" name="EMAIL" [formControl]="fCEmail">
+            <label for="PASSWORD">PASSWORD</label>
+            <input type="password" name="PASSWORD" [formControl]="fCPassword">
+        </div>
+        <div class="actions">
+            <button (click)="login()">LOGIN</button>
+            <button (click)="nav('register')">REGISTER</button>
+        </div>
+    </div>
+</div>

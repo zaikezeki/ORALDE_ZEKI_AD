@@ -1,50 +1,83 @@
-import { Controller,Get,Body,Post, Param, Delete, Put,Patch } from '@nestjs/common';
-import { resourceUsage } from 'process';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService:UserService){}
+
+    constructor(private readonly userService:UserService){
+    }
 
     @Post('/register')
-    register(@Body() body: any) {
+    register(@Body() body:any ) {
+      console.log(body);
       return this.userService.register(body);
+
+            /*fails if .has attributes of the wrong type
+        is missing an attribute
+        has an invalid attribute key
+        Email already exists in database 
+        */
+    
     }
-  
-    @Post('/login')
-    login(@Body('email') email: string, @Body('password') password: string) {
-      return this.userService.login(email, password);
-    }
-  
+
     @Get('/all')
-    getAllUser() {
-      return this.userService.getAll();
+    getAll(@Body() body:any){
+    return this.userService.getAll();
     }
-    @Get('/search/:term')
-    searchUser(@Param('term') term: string) {
-      return this.userService.searchUser(term);
+
+    @Get("/:id")
+    getId(@Param('id') id ){
+       return this.userService.getId(id);
     }
-  
-    @Get('/:id')
-    getUserID(@Param('id') id: string) {
-      return this.userService.getOne(id);
+
+   
+    @Put("/:id")
+    editUser(@Param('id') id, @Body() body:any)
+    {
+
+        if(id!=null && body!=null)
+            return this.userService.editUser(id,body);
+        else
+            return "No parameters added";
     }
-  
-    @Put('/:id')
-    replaceValuePut(@Param('id') id: string, @Body() body: any) {
-      return this.userService.replaceValuePut(id, body);
+
+    @Get("search/:term")
+    searchUser(@Param('term') term)
+    {
+        return this.userService.searchUser(term);
     }
-  
-    @Patch('/:id')
-    replaceValuePatch(@Param('id') id: string, @Body() body: any) {
-      return this.userService.replaceValuePatch(id, body);
+
+
+   
+    @Patch("/:id")
+    patchUser(@Param('id') id, @Body() body:any)
+    {
+        if(id!=null && body!=null)
+            return this.userService.patchUser(id,body);
+        else
+            return "No parameters added";
     }
-  
-    @Delete('/:id')
-    deleteUser(@Param('id') id: string) {
-      return this.userService.deleteUser(id);
+
+    
+    @Delete("/:id")
+    deleteUser(@Param('id') id)
+    {
+        return this.userService.deleteUser(id);
     }
-  
-  
-  
-  }
+
+
+    @Post('/login')
+    logIn(@Body() body : any ) {
+      
+      return this.userService.logIn(body);
+    
+    }
+
+
+
+
+
+
+
+   
+}
