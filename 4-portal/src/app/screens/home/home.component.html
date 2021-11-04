@@ -1,23 +1,102 @@
-<div class="container">
-    <tr>
-        <th>User ID</th>
-        <th>User Name</th>
-        <th>User Age</th>
-        <th>User Email</th>
-    </tr>
+<body>
 
-    <tbody>
-        <tr *ngFor="let result of displayResult">
-            <td>{{ result.id }}</td>
+    <div id="mySidenav" class="sidenav">
+        <p class="logo"><span>KRAZY</span>& HULSAM WEB APPLICATION</p>
+        <a href="#" class="icon-a"><i class="fa fa-dashboard icons"></i> &nbsp;&nbsp;Dashboard</a>
+        <a href="#" class="icon-a"><i class="fa fa-users icons"></i> &nbsp;&nbsp;Customers</a>
+        <a href="#" class="icon-a"><i class="fa fa-list icons"></i> &nbsp;&nbsp;Projects</a>
+        <a href="#" class="icon-a"><i class="fa fa-shopping-bag icons"></i> &nbsp;&nbsp;Orders</a>
+        <a href="#" class="icon-a"><i class="fa fa-tasks icons"></i> &nbsp;&nbsp;Inventory</a>
+        <a href="#" class="icon-a"><i class="fa fa-user icons"></i> &nbsp;&nbsp;Accounts</a>
+        <a href="#" class="icon-a"><i class="fa fa-list-alt icons"></i> &nbsp;&nbsp;Tasks</a>
 
-            <td>{{ result.name }}</td>
+    </div>
+    <div id="main">
 
-            <td>{{ result.age }}</td>
-            <td>{{ result.email }}</td>
-            <br><br>
-        </tr>
-    </tbody>
+        <div class="head">
+            <div class="col-div-6">
+                <span style="font-size:30px; color: white;" class="nav"> Administrator </span>
+            </div>
+
+            <div class="col-div-6">
+                <div class="menu">
+                    <span style="font-size:30px;cursor:pointer; color: white;" class="nav3">&#9776; Menu </span>
+                    <div class="dropdown">
+                        <span style="font-size:30px;cursor:pointer; color: white;" class="nav4"></span> <a (click)="nav('login')">Logout</a>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="clearfix"></div>
+        <br/>
+
+        <div class="col-div-3">
+            <div class="box">
+                <input type="text" name="id" class="input" [formControl]="fcID" />
+                <button (click)="search()">Search</button>
+
+                <i class="fa fa-users box-icon"></i>
+            </div>
+        </div>
+
+
+        <div class="clearfix"></div>
+        <br/><br/>
+        <div class="col-div-8">
+            <div class="box-8">
+                <div class="content-box">
+                    <p>All Users <span></span></p>
+                    <br/>
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                        <tbody>
+                            <ng-container *ngIf="show; then all; else showId"></ng-container>
+
+                            <ng-template #all>
+                                <tr *ngFor="let users of users; index as i">
+                                    <td>{{i+1 }}</td>
+                                    <td>{{users.name }}</td>
+                                    <td>{{ users.id}}</td>
+                                    <td>{{ users.age }}</td>
+                                    <td>{{ users.email }}</td>
+                                    <td>
+                                        <button (click)="delete(i)">Delete</button>
+                                        <button (click)="delete(i)">Edit</button>
+                                    </td>
+                                    <br><br>
+                                </tr>
+                            </ng-template>
+
+                            <ng-template #showId>
+                                <tr *ngIf="showId">
+                                    <td>{{ 1 }}</td>
+                                    <td>{{ displayResult.id }}</td>
+
+                                    <td>{{ displayResult.name }}</td>
+
+                                    <td>{{ displayResult.age }}</td>
+                                    <td>{{ displayResult.email }}</td>
+
+                                    <br><br>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
 
 
-</div>
+        <div class="clearfix"></div>
+    </div>
