@@ -52,16 +52,23 @@
                     <p>All Users <span></span></p>
                     <br/>
                     <table>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Age</th>
-                            <th>Email</th>
-                            <th>Action</th>
-                        </tr>
-                        <tbody>
-                            <ng-container *ngIf="show; then all; else showId"></ng-container>
+                        <thead>
+                            <ng-template *ngIf="showAll">
 
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>ID</th>
+                                    <th>Age</th>
+                                    <th>Email</th>
+                                    <th>Action</th>
+                                </tr>
+                            </ng-template>
+                        </thead>
+
+                        <tbody>
+                            <ng-container *ngIf="showAll; then all; else showId"></ng-container>
+                            <ng-container *ngIf="edit; then patch"></ng-container>
                             <ng-template #all>
                                 <tr *ngFor="let users of users; index as i">
                                     <td>{{i+1 }}</td>
@@ -71,18 +78,18 @@
                                     <td>{{ users.email }}</td>
                                     <td>
                                         <button (click)="delete(i)">Delete</button>
-                                        <button (click)="delete(i)">Edit</button>
+                                        <button (click)="changeUser(i)">Edit</button>
                                     </td>
                                     <br><br>
                                 </tr>
                             </ng-template>
 
                             <ng-template #showId>
-                                <tr *ngIf="showId">
+                                <tr *ngIf="showID">
                                     <td>{{ 1 }}</td>
-                                    <td>{{ displayResult.id }}</td>
-
                                     <td>{{ displayResult.name }}</td>
+
+                                    <td>{{ displayResult.id }}</td>
 
                                     <td>{{ displayResult.age }}</td>
                                     <td>{{ displayResult.email }}</td>
@@ -90,13 +97,29 @@
                                     <br><br>
                                 </tr>
                             </ng-template>
+
+                            <ng-template #patch>
+                                <div class="register">
+                                    <form class="inputs" method="get" [formGroup]="newForm" (ngSubmit)="Submit()">
+                                        <label for="NAME">Name</label>
+                                        <input type="!name" name="NAME" placeholder={{displayResult.name}} formControlName="fcName" />
+                                        <label for="AGE">Age</label>
+                                        <input type="number" name="Age1" id="Age1" placeholder={{displayResult.age}} formControlName="fcAge" />
+                                        <label for="EMAIL">Email</label>
+                                        <input type="email" name="EMAIL" placeholder={{displayResult.email}} formControlName="fcEmail" />
+                                        <button type="Confirm" type="submit" id="editAcc" (click)="confirm()">
+                                            Confirm Changes
+                                          </button><br><br>
+                                    </form>
+                                    <div class="actions">
+                                        <button (click)="getAll()">BACK TO HOME</button>
+                                    </div>
+                                </div>
+                            </ng-template>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
-
-
         <div class="clearfix"></div>
     </div>

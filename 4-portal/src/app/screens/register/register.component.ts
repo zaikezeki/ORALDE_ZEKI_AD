@@ -26,10 +26,7 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  fCEmail = new FormControl();
-  fCPassword = new FormControl();
-  fCAge = new FormControl();
-  fCName = new FormControl();
+  
   requestResult = '';
 
   Submit() {
@@ -78,6 +75,8 @@ export class RegisterComponent implements OnInit {
     if (result.success) {
       alert('Account Created');
       this.nav('login');
+    }else{
+      alert("Email is already in use");
     }
     console.log(result.success);
     this.requestResult = result.data;

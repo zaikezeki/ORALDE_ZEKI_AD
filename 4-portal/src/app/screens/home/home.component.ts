@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from './user.model';
 
 
@@ -17,10 +17,26 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router, private api: HttpClient) { }
 
   displayResult:any;
-  show:boolean=true;
+  showID:boolean=true;
+  showAll:boolean=true;
+  edit:boolean=false;
+  content:boolean=true;
+
 
 
   fcID=new FormControl();
+  error:string='';
+  
+
+
+  newForm: FormGroup= new FormGroup({
+    fcName: new FormControl('', Validators.required),
+    fcAge: new FormControl(0, Validators.min(1)),
+    fcEmail: new FormControl('', Validators.required),
+    fcPassword: new FormControl('', Validators.required),
+    fcPassword2: new FormControl('', Validators.required),
+  });
+
 
   ngOnInit(): void {
     this.getAll();
@@ -29,14 +45,18 @@ export class HomeComponent implements OnInit {
   async getAll(){
     var result:any =await this.api.get(environment.API_URL + "/user/all").toPromise();
     var temp: Array<User>=[];
-    this.users=temp;
+    this.showAll=true;
+    this.edit=false;
     if(result.success){
       this.displayResult = result.data;
       result.data.forEach((json: any) => {
       var tempU = User.fromJson(json.id, json);
       if (tempU != null) temp.push(tempU);
     });
+    
   }
+  this.users=temp;
+
 }
 
 
@@ -47,8 +67,6 @@ async delete(i : number){
       var result:any = await this.api.delete(environment.API_URL + `/user/${this.users[i].id}`).toPromise();
       if(result.success){
         this.getAll();
-        this.getAll();
-      
         alert("Successfully Deleted");
       }
   }
@@ -56,21 +74,18 @@ async delete(i : number){
 }
 
 async search() {
-  if (this.fcID.value.length > 30){
+  if (this.fcID.value.length >=28){
     try {
       var result:any = await this.api.get(environment.API_URL + "/user/"+ this.fcID.value).toPromise();
       if (result.success){
-       
-        this.displayResult.id = result.data.id
+       this.displayResult.id = result.data.id
         this.displayResult.name = result.data.name
         this.displayResult.age = result.data.age
         this.displayResult.email = result.data.email
         console.log(this.fcID.value.length);
-       
       }
       else{
         this.getAll();
-       
         alert("ID not found in database");
         console.log(this.fcID.value.length);
       }
@@ -88,8 +103,7 @@ async search() {
       }
       else{
         this.getAll();
-       
-        alert("Seems like it is not in our database");
+       alert("Not Found");
         console.log(this.fcID.value.length);
       }
     } catch (e) {
@@ -98,6 +112,86 @@ async search() {
     }
   }  
 
+
+  Submit() {
+    if (
+      this.newForm.value['fcPassword'] !==
+      this.newForm.value['fcPassword2']
+    ) {
+      this.error = 'Password doesnt match!';
+      return;
+    }
+    if (!this.newForm.valid) {
+      {
+        this.error = 'No fields must be empty';
+        return;
+      }
+    }
+    if (this.newForm.valid) {
+      var payload: {
+        name: string;
+        email: string;
+        age: number;
+        password: string;
+      };
+
+      payload = {
+        name: this.newForm.value.fcName,
+        email: this.newForm.value.fcEmail,
+        age: this.newForm.value.fcAge,
+        password: this.newForm.value.fcPassword,
+      };
+
+      console.log(payload);
+    }
+  }
+
+  async changeUser(i: number){
+    var result:any = await this.api.get(environment.API_URL + `/user/${this.users[i].id}`).toPromise();
+    if (result.success){
+    this.displayResult.id = this.users[i].id
+    this.displayResult.name = this.users[i].name
+    this.displayResult.age = this.users[i].age
+    this.displayResult.email = this.users[i].email
+    this.showID=false;
+    this.showAll=false;
+    this.edit=true;
+    this.content=false;
+    }
+    else {
+      alert("User not found");
+      this.getAll();
+    }
+    this.clearForm();
+  }
+
+
+  clearForm(){
+    this.newForm.setValue({
+    fcName: '',
+    fcAge: '',
+    fcEmail: '',
+    fcPassword: '',
+    fcPassword2: '',
+    })
+  }
+
+  async confirm(){
+    var result: any = await this.api
+      .patch(environment.API_URL + "/user/"+this.displayResult.id, {
+        name: this.newForm.value.fcName,
+        age: this.newForm.value.fcAge,
+        email: this.newForm.value.fcEmail,
+      })
+      .toPromise();
+      console.log(result.success);
+      if (result.success){
+        this.getAll();
+      }
+      else {
+        alert("Email is already in Use");
+      }
+  }
 
 
   nav(destination: string) {
